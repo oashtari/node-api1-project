@@ -50,3 +50,17 @@ server.post('/api/users', (req, res) => {
             .json({ message: 'There was an error while saving the user to the database.' })
     }
 })
+
+// GET to api/users
+
+server.get('/api/users', (req, res) => {
+    if (req.body) {
+        res
+            .status(200)
+            .json(users)
+    } else {
+        res
+            .status(500)
+            .json({ message: "The users information could not be retrieved." })
+    }
+})
