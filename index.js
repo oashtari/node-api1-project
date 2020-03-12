@@ -14,6 +14,16 @@ let users = [
         id: shortid.generate(),
         name: "Jane Matthewson",
         bio: "She writes"
+    },
+    {
+        id: 10,
+        name: "person 10",
+        bio: "person talks"
+    },
+    {
+        id: 20,
+        name: "person 20",
+        bio: "person speaks"
     }
 ];
 
@@ -64,3 +74,88 @@ server.get('/api/users', (req, res) => {
             .json({ message: "The users information could not be retrieved." })
     }
 })
+
+
+// GET to api/user/:id
+
+server.get('/api/users/:id', (req, res) => {
+    const user = users.find(user => user.id === req.params.id);
+
+    if (user) {
+        res
+            .status(200)
+            .json(user)
+    } else if (!user) {
+        res
+            .status(404)
+            .json({ message: "The user with the specified ID does not exist." })
+    } else {
+        res
+            .status(500)
+            .json({ message: "The user information could not be retrieved." })
+    }
+})
+
+
+// DELETE
+
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+
+    const deleted = users.find(user => user.id === id);
+
+    if (deleted) {
+        users = users.filter(user => user.id !== id)
+
+        res
+            .status(200)
+            .json(deleted)
+
+    } else if (!deleted) {
+        res
+            .status(404)
+            .json({ message: "The user with the specified ID does not exist." })
+    } else {
+        res
+            .status(500)
+            .json({ message: "The user could not be removed." })
+    }
+})
+
+
+
+// PUT
+
+server.put('/api/users/:id', (req, res) => {
+
+    const { id } = req.params;
+
+    const changes = req.body;
+
+    let index = users.findIndex(user => user.id === id);
+
+    if (index !== -1) {
+        users[index] = changes;
+        res
+            .status(200)
+            .json(users[index]);
+    } else if (index === -1) {
+        res
+            .status(404)
+            .json({ message: "The user with the specified ID does not exist." })
+    } else if (!changes.name || !changes.bio) {
+        res
+            .status(400)
+            .json({ message: 'Please provide name and bio for the user.' })
+    } else {
+        res
+            .status(500)
+            .json({ message: "The user information could not be modified." })
+    }
+})
+
+// - If the user is found and the new information is valid:
+
+//   - update the user document in the database using the new information sent in the `request body`.
+//   - respond with HTTP status code `200` (OK).
+//   - return the newly updated _user document_.
