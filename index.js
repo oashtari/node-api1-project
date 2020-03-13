@@ -16,12 +16,12 @@ let users = [
         bio: "She writes"
     },
     {
-        id: 10,
+        id: shortid.generate(),
         name: "person 10",
         bio: "person talks"
     },
     {
-        id: 20,
+        id: shortid.generate(),
         name: "person 20",
         bio: "person speaks"
     }
