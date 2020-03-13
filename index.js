@@ -100,17 +100,9 @@ server.get('/api/users/:id', (req, res) => {
 
 server.delete('/api/users/:id', (req, res) => {
     const { id } = req.params;
-    // console.log('what is req params', req.params)
-    // console.log('what is id', id)
 
+    const deleted = users.find(user => JSON.stringify(user.id) === `${id}`)
 
-    const deleted = users.find(user => { user.id === `${id}` })
-    //     console.log('what is user ID', user.id);
-    //     console.log('what is USER', user);
-    //     // console.log('what is DELETED', deleted)
-
-    // });
-    // console.log('is deleted happening', deleted)
     if (deleted) {
         users = users.filter(user => user.id !== id)
 
@@ -137,21 +129,24 @@ server.put('/api/users/:id', (req, res) => {
 
     const changes = req.body;
 
-    let index = users.findIndex(user => user.id === id);
+    console.log('changes:', changes)
+    console.log('id', id)
 
-    if (index !== -1) {
-        users[index] = changes;
+    let index = users.findIndex(user => JSON.stringify(user.id) === JSON.stringify(id));
+
+    if (!changes.name || !changes.bio) {
         res
-            .status(200)
-            .json(users[index]);
+            .status(400)
+            .json({ message: 'Please provide name and bio for the user.' })
     } else if (index === -1) {
         res
             .status(404)
             .json({ message: "The user with the specified ID does not exist." })
-    } else if (!changes.name || !changes.bio) {
+    } else if (index !== -1) {
+        users[index] = changes;
         res
-            .status(400)
-            .json({ message: 'Please provide name and bio for the user.' })
+            .status(200)
+            .json(users[index]);
     } else {
         res
             .status(500)
