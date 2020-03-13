@@ -96,14 +96,21 @@ server.get('/api/users/:id', (req, res) => {
     }
 })
 
-
 // DELETE
 
 server.delete('/api/users/:id', (req, res) => {
     const { id } = req.params;
+    // console.log('what is req params', req.params)
+    // console.log('what is id', id)
 
-    const deleted = users.find(user => user.id === id);
 
+    const deleted = users.find(user => { user.id === `${id}` })
+    //     console.log('what is user ID', user.id);
+    //     console.log('what is USER', user);
+    //     // console.log('what is DELETED', deleted)
+
+    // });
+    // console.log('is deleted happening', deleted)
     if (deleted) {
         users = users.filter(user => user.id !== id)
 
@@ -121,8 +128,6 @@ server.delete('/api/users/:id', (req, res) => {
             .json({ message: "The user could not be removed." })
     }
 })
-
-
 
 // PUT
 
@@ -153,9 +158,3 @@ server.put('/api/users/:id', (req, res) => {
             .json({ message: "The user information could not be modified." })
     }
 })
-
-// - If the user is found and the new information is valid:
-
-//   - update the user document in the database using the new information sent in the `request body`.
-//   - respond with HTTP status code `200` (OK).
-//   - return the newly updated _user document_.
